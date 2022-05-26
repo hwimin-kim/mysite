@@ -3,6 +3,7 @@ package com.douzone.mysite.repository;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douzone.mysite.vo.UserVo;
@@ -10,6 +11,57 @@ import com.douzone.mysite.vo.UserVo;
 public class UserRepository {
 	private static final String ID = "webdb";
 	private static final String PASSWORD = "webdb";
+	
+	public UserVo findByEmailAndPassword(UserVo vo) {
+		UserVo result = null;
+		
+		Connection connecion = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			connecion = getConnection();
+			
+			// 3. SQL 준비
+			String sql = "select no, name from user where email = ? and password = ?";
+			pstmt = connecion.prepareStatement(sql);
+			
+			// 4. Parameter Mapping
+			pstmt.setString(1, vo.getEmail());
+			pstmt.setString(2, vo.getPassword());
+			
+			// 5. SQL 실행
+			rs =pstmt.executeQuery();		
+			
+			// 6. 결과처리
+			if(rs.next()) {
+				Long no =  rs.getLong(1);
+				String name = rs.getString(2);
+
+				
+				result = new UserVo();
+				result.setNo(no);
+				result.setName(name);
+				//vo.setNo(no);
+				//vo.setName(name);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("드라이버 로딩 실패:" + e);
+		} finally {
+			try {
+				if(rs != null)
+					rs.close();
+				if(pstmt != null)
+					pstmt.close();
+				if(connecion != null)
+					connecion.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 	
 	public boolean insert(UserVo vo) {
 		boolean result = false;
@@ -57,5 +109,4 @@ public class UserRepository {
 		}	
 		return connecion;
 	}
-
 }

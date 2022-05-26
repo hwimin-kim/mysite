@@ -6,13 +6,35 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.douzone.mysite.repository.UserRepository;
+import com.douzone.mysite.vo.UserVo;
 import com.douzone.web.mvc.Action;
+import com.douzone.web.util.WebUtil;
 
 public class LoginAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("loginAction called");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+		
+		UserVo vo = new UserVo();
+		vo.setEmail(email);
+		vo.setPassword(password);
+		
+		UserVo authUser = new UserRepository().findByEmailAndPassword(vo);
+		if(authUser == null) {
+			/* 로그인 실패 */
+			System.out.println("로그인 실패");
+			request.setAttribute("email", email);
+			request.setAttribute("result", "fale");
+			WebUtil.forward(request, response, "user/loginform");
+			return ;
+		}
+		
+		/* 로그인 처리 */
+		System.out.println("로그인 성공");
+		System.out.println(authUser.getName());
 	}
 
 }
