@@ -16,3 +16,8 @@ select no, name
  from user
  where email = 'dooly@gmail.com'
  and password = '1234';
+ 
+ -- findByno
+ select no, name, email, gender
+ from user
+ where no = 3;
