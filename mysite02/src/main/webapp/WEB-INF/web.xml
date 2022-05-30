@@ -2,6 +2,11 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://JAVA.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
   <display-name>mysite02</display-name>
   
+  <!-- Context Param -->
+  <context-param>
+  		<param-name>contextConfigLocation</param-name>
+  		<param-value>/WEB-INF/applicationContext.xml</param-value>
+  </context-param>
   <!-- Context Load Listener -->
   <listener>
     	<listener-class>com.douzone.mysite.web.listener.ContextLoadListener</listener-class>
