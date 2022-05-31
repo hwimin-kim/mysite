@@ -26,39 +26,25 @@
 						<th>조회수</th>
 						<th>작성일</th>
 						<th>&nbsp;</th>
-					</tr>				
+					</tr>		
+					<c:set var='count' value='${fn:length(list)}'/>
+					<c:forEach items='${list }' var='vo' varStatus='status'>
 					<tr>
-						<td>3</td>
-						<td style="text-align:left; padding-left:0px">
-							<a href="">세 번째 글입니다.</a>
+						<td>${count-status.index }</td>
+						<td style="text-align:left; padding-left:${(vo.depth-1) *10}px">
+							<c:if test="${vo.depth != 1}">
+								<img src='${pageContext.servletContext.contextPath }/assets/images/reply.png' />
+							</c:if>
+								<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no}">${vo.title }</a>
 						</td>
-						<td>안대혁</td>
-						<td>3</td>
-						<td>2015-10-11 12:04:20</td>
-						<td><a href="" class="del">삭제</a></td>
+						<td>${vo.userName }</td>
+						<td>${vo.hit }</td>
+						<td>${vo.regDate }</td>
+						<c:if test="${vo.userNo eq authUser.no}">
+								<td><a href="${pageContext.servletContext.contextPath }/board?a=delete&no=${vo.no}" class="del">삭제</a></td>
+						</c:if>
 					</tr>
-					<tr>
-						<td>2</td>
-						<td style="text-align:left; padding-left:10px">
-							<img src='${pageContext.servletContext.contextPath }/assets/images/reply.png' />
-							<a href="">두 번째 글입니다.</a>
-						</td>
-						<td>안대혁</td>
-						<td>3</td>
-						<td>2015-10-02 12:04:12</td>
-						<td><a href="" class="del">삭제</a></td>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td  style="text-align:left; padding-left:20px">
-							<img src='${pageContext.servletContext.contextPath }/assets/images/reply.png' />
-							<a href="">첫 번째 글입니다.</a>
-						</td>
-						<td>안대혁</td>
-						<td>3</td>
-						<td>2015-09-25 07:24:32</td>
-						<td><a href="" class="del">삭제</a></td>
-					</tr>
+					</c:forEach>
 				</table>
 				
 				<!-- pager 추가 -->
@@ -76,8 +62,9 @@
 				<!-- pager 추가 -->
 				
 				<div class="bottom">
-					<a href="" id="new-book">글쓰기</a>
-					<a href="">글쓰기</a>
+						<c:if test="${not empty authUser }">
+								<a href="${pageContext.servletContext.contextPath }/board?a=writeform" id="new-book">글쓰기</a>
+						</c:if>
 				</div>				
 			</div>
 		</div>
