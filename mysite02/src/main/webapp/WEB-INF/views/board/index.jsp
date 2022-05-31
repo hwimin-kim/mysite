@@ -50,15 +50,15 @@
 				<!-- pager 추가 -->
 				<div class="pager">
 					<ul>
-						<c:if test="${minPage < currentPage}">
-								<li><a href="${pageContext.servletContext.contextPath }/board?page=${currentPage -1 }">◀</a></li>
+						<c:if test="${pagingVo.minPage < pagingVo.currentPage}">
+								<li><a href="${pageContext.servletContext.contextPath }/board?page=${pagingVo.currentPage -1 }">◀</a></li>
 						</c:if>
-						<c:forEach var="i" begin="${startPage}" end="${endPage}">
+						<c:forEach var="i" begin="${pagingVo.startPage}" end="${pagingVo.endPage}">
 						<c:choose>
-								<c:when test="${currentPage == i}">
+								<c:when test="${pagingVo.currentPage == i}">
 										<li class="selected">${i }</li>
 								</c:when>
-								<c:when test="${i > maxPage}">
+								<c:when test="${i > pagingVo.maxPage}">
 										<li>${i }</li>
 								</c:when>
 								<c:otherwise>
@@ -66,8 +66,8 @@
 								</c:otherwise>				
 						</c:choose>
 						</c:forEach>
-						<c:if test="${maxPage > currentPage}">
-								<li><a href="${pageContext.servletContext.contextPath }/board?page=${currentPage +1 }">▶</a></li>
+						<c:if test="${pagingVo.maxPage > pagingVo.currentPage}">
+								<li><a href="${pageContext.servletContext.contextPath }/board?page=${pagingVo.currentPage +1 }">▶</a></li>
 						</c:if>
 					</ul>
 				</div>					

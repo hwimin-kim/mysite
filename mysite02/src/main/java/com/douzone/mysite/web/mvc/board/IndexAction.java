@@ -22,6 +22,7 @@ public class IndexAction implements Action {
 		int currentPage = 1;	
 		
 		PagingVo vo = new PagingVo();
+		vo.setMinPage(1);
 		vo.setPageCount(5);
 		vo.setListCount(new BoardRepository().findCount());
 		vo.calcMaxPage();
@@ -30,25 +31,20 @@ public class IndexAction implements Action {
 		try {	
 			if((request.getParameter("page") == null))
 				currentPage = 1;
-			else if(Integer.parseInt(request.getParameter("page"))<= 0)
+			else if(Integer.parseInt(request.getParameter("page"))< 1)
 				currentPage = 1;
 			else if(Integer.parseInt(request.getParameter("page")) > vo.getMaxPage())
 				currentPage = vo.getMaxPage();
 			else
 				currentPage = Integer.parseInt(request.getParameter("page"));
-		} catch (NumberFormatException e){
+		} catch (NumberFormatException e) {
 			currentPage = 1;
 		} finally {
 			vo.setCurrentPage(currentPage);
 			vo.calcPage();		
 		}
 		
-		request.setAttribute("startPage", vo.getStartPage());
-		request.setAttribute("endPage", vo.getEndPage());
-		request.setAttribute("pageCount", vo.getPageCount());
-		request.setAttribute("currentPage", vo.getCurrentPage());
-		request.setAttribute("maxPage", vo.getMaxPage());
-		request.setAttribute("minPage", 1);
+		request.setAttribute("pagingVo", vo);
 		////////////////////////////////////////////////////////////////////
 		
 		List<BoardVo> list = new BoardRepository().findAll(currentPage, vo.getPageCount());

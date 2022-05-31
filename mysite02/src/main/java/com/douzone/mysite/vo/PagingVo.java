@@ -9,6 +9,7 @@ public class PagingVo {
 	private int currentPage;
 	private int listCount;
 	private int maxPage;
+	private int minPage;
 	
 	public void calcPage() {
 		if(currentPage % pageCount == 0) {
@@ -77,6 +78,15 @@ public class PagingVo {
 
 	public void setMaxPage(int maxPage) {
 		this.maxPage = maxPage;
+	}
+	
+	
+	public int getMinPage() {
+		return minPage;
+	}
+
+	public void setMinPage(int minPage) {
+		this.minPage = minPage;
 	}
 
 	@Override
