@@ -19,22 +19,29 @@ public class IndexAction implements Action {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		/* page */
 		////////////////////////////////////////////////////////////////////
-		int currentPage;	
-		
-		if((request.getParameter("page") == null))
-			currentPage = 1;
-		else if(Integer.parseInt(request.getParameter("page"))<= 0)
-			currentPage = 1;
-		else
-			currentPage = Integer.parseInt(request.getParameter("page"));
-		
+		int currentPage = 1;	
 		
 		PagingVo vo = new PagingVo();
 		vo.setPageCount(5);
 		vo.setListCount(new BoardRepository().findCount());
-		vo.setCurrentPage(currentPage);
-		vo.calcPage();
 		vo.calcMaxPage();
+		
+		/* page 예외 체크 */
+		try {	
+			if((request.getParameter("page") == null))
+				currentPage = 1;
+			else if(Integer.parseInt(request.getParameter("page"))<= 0)
+				currentPage = 1;
+			else if(Integer.parseInt(request.getParameter("page")) > vo.getMaxPage())
+				currentPage = vo.getMaxPage();
+			else
+				currentPage = Integer.parseInt(request.getParameter("page"));
+		} catch (NumberFormatException e){
+			currentPage = 1;
+		} finally {
+			vo.setCurrentPage(currentPage);
+			vo.calcPage();		
+		}
 		
 		request.setAttribute("startPage", vo.getStartPage());
 		request.setAttribute("endPage", vo.getEndPage());
