@@ -14,6 +14,47 @@ public class BoardRepository {
 	private static final String ID = "webdb";
 	private static final String PASSWORD = "webdb";
 
+	public int findCount() {
+		int result = 0;
+		Connection connecion = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			connecion = getConnection();
+			
+			// 3. SQL 준비
+			String sql = "select count(*) from board";
+			pstmt = connecion.prepareStatement(sql);
+			
+			// 4. Parameter Mapping
+			
+			// 5. SQL 실행
+			rs =pstmt.executeQuery();		
+			
+			// 6. 결과처리
+			if(rs.next()) 
+				result = rs.getInt(1);
+	
+			
+			
+		} catch (SQLException e) {
+			System.out.println("드라이버 로딩 실패:" + e);
+		} finally {
+			try {
+				if(rs != null)
+					rs.close();
+				if(pstmt != null)
+					pstmt.close();
+				if(connecion != null)
+					connecion.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
 	public BoardVo findByNo(String no) {
 		BoardVo result = null;
 		Connection connecion = null;
@@ -69,21 +110,23 @@ public class BoardRepository {
 		return result;
 	}
 	
-	public List<BoardVo> findAll() {
+	public List<BoardVo> findAll(int page, int pageCount) {
 		List<BoardVo> result = new ArrayList<>();
 		Connection connecion = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		Long currentPage = Long.valueOf((page-1)*pageCount);
 		
 		try {
 			connecion = getConnection();
 			
 			// 3. SQL 준비
-			String sql = "select a.no, a.title, a.contents, a.hit, date_format(a.reg_date, '%Y/%m/%d %H:%i:%s') as reg_date, a.g_no, a.o_no, a.depth, a.user_no, b.name from board a, user b where a.user_no = b.no order by g_no desc, o_no asc";
+			String sql = "select a.no, a.title, a.contents, a.hit, date_format(a.reg_date, '%Y/%m/%d %H:%i:%s') as reg_date, a.g_no, a.o_no, a.depth, a.user_no, b.name from board a, user b where a.user_no = b.no order by g_no desc, o_no asc limit ?, ?";
 			pstmt = connecion.prepareStatement(sql);
 			
 			// 4. Parameter Mapping
-			
+			pstmt.setLong(1, currentPage);
+			pstmt.setLong(2, Long.valueOf(pageCount));
 			// 5. SQL 실행
 			rs =pstmt.executeQuery();		
 			
@@ -175,6 +218,38 @@ public class BoardRepository {
 		}
 		return result;
 	}
+	
+	public boolean updateByno(Long no) {
+		boolean result = false;
+		Connection connecion = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			connecion = getConnection();
+			
+			String sql = "update board set hit = hit + 1 where no = ?";
+			pstmt = connecion.prepareStatement(sql);
+			
+			pstmt.setLong(1, no);
+			
+			int count =pstmt.executeUpdate();
+			result = count == 1;
+				
+		}  catch (SQLException e) {
+			System.out.println("드라이버 로딩 실패:" + e);
+		} finally {
+			try {
+				if(pstmt != null)
+					pstmt.close();
+				if(connecion != null)
+					connecion.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
 	public boolean updateByno(BoardVo vo) {
 		boolean result = false;
 		Connection connecion = null;
@@ -216,12 +291,11 @@ public class BoardRepository {
 		try {
 			connecion = getConnection();
 			
-			String sql = "update board set o_no = ? + 1 where g_no = ? and o_no >= ?";
+			String sql = "update board set o_no = o_no + 1 where g_no = ? and o_no >= ?";
 			pstmt = connecion.prepareStatement(sql);
-			
-			pstmt.setLong(1, vo.getOtherNo());
-			pstmt.setLong(2, vo.getGroupNo());
-			pstmt.setLong(3, vo.getOtherNo());
+		
+			pstmt.setLong(1, vo.getGroupNo());
+			pstmt.setLong(2, vo.getOtherNo());
 			
 			int count =pstmt.executeUpdate();
 			result = count == 1;

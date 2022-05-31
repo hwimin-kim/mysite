@@ -20,6 +20,10 @@ public class ViewAction implements Action {
 	
 		request.setAttribute("vo", vo);
 		request.setAttribute("no", request.getParameter("no"));
+		
+		/* hit update */
+		new BoardRepository().updateByno(Long.parseLong(request.getParameter("no")));
+		
 		WebUtil.forward(request, response, "board/view");
 	}
 
