@@ -51,8 +51,11 @@
 				<!-- pager 추가 -->
 				<div class="pager">
 					<ul>
-						<c:if test="${pagingVo.minPage < pagingVo.currentPage}">
+						<c:if test="${pagingVo.minPage < pagingVo.currentPage and empty keyWord}">
 								<li><a href="${pageContext.servletContext.contextPath }/board?page=${pagingVo.currentPage -1 }">◀</a></li>
+						</c:if>
+						<c:if test="${pagingVo.minPage < pagingVo.currentPage and not empty keyWord}">
+								<li><a href="${pageContext.servletContext.contextPath }/board?page=${pagingVo.currentPage -1 }&kwd=${keyWord }">◀</a></li>
 						</c:if>
 						<c:forEach var="i" begin="${pagingVo.startPage}" end="${pagingVo.endPage}">
 						<c:choose>
@@ -70,9 +73,12 @@
 								</c:otherwise>				
 						</c:choose>
 						</c:forEach>
-						<c:if test="${pagingVo.maxPage > pagingVo.currentPage}">
+						<c:if test="${pagingVo.maxPage > pagingVo.currentPage and empty keyWord}">
 								<li><a href="${pageContext.servletContext.contextPath }/board?page=${pagingVo.currentPage +1 }">▶</a></li>
 						</c:if>
+						<c:if test="${pagingVo.maxPage > pagingVo.currentPage and not empty keyWord}">
+								<li><a href="${pageContext.servletContext.contextPath }/board?page=${pagingVo.currentPage +1 }&kwd=${keyWord }">▶</a></li>
+						</c:if>	
 					</ul>
 				</div>					
 				<!-- pager 추가 -->

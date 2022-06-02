@@ -22,7 +22,9 @@ public class PagingVo {
 	}
 	
 	public void calcMaxPage() {
-		if(listCount % pageCount != 0)
+		if(listCount == 0)
+			maxPage = 1;
+		else if(listCount % pageCount != 0)
 			maxPage = (listCount/pageCount) + 1;
 		else
 			maxPage = (listCount/pageCount);
