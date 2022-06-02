@@ -14,8 +14,9 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="" method="post">
-					<input type="text" id="kwd" name="kwd" value="">
+				<form id="search_form" action="${pageContext.servletContext.contextPath }/board" method="post">
+					<input type="text" id="kwd" name="kwd" value="" placeholder="${keyWord }">
+					<input type="hidden" id="page" name="page" value="1">
 					<input type="submit" value="찾기">
 				</form>
 				<table class="tbl-ex">
@@ -61,8 +62,11 @@
 								<c:when test="${i > pagingVo.maxPage}">
 										<li>${i }</li>
 								</c:when>
-								<c:otherwise>
+								<c:when test="${empty keyWord}">
 										<li><a href="${pageContext.servletContext.contextPath }/board?page=${i }">${i }</a></li>
+								</c:when>
+								<c:otherwise>
+										<li><a href="${pageContext.servletContext.contextPath }/board?page=${i }&kwd=${keyWord }">${i }</a></li>
 								</c:otherwise>				
 						</c:choose>
 						</c:forEach>

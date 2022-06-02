@@ -17,6 +17,8 @@ public class IndexAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+		List<BoardVo> list = null;
+		String keyWord = request.getParameter("kwd");
 		/* page */
 		////////////////////////////////////////////////////////////////////
 		int currentPage = 1;	
@@ -24,12 +26,12 @@ public class IndexAction implements Action {
 		PagingVo vo = new PagingVo();
 		vo.setMinPage(1);
 		vo.setPageCount(5);
-		vo.setListCount(new BoardRepository().findCount());
+		vo.setListCount(new BoardRepository().findCount(keyWord));
 		vo.calcMaxPage();
 		
 		/* page 예외 체크 */
 		try {	
-			if((request.getParameter("page") == null))
+			if(request.getParameter("page") == null)
 				currentPage = 1;
 			else if(Integer.parseInt(request.getParameter("page"))< 1)
 				currentPage = 1;
@@ -46,8 +48,9 @@ public class IndexAction implements Action {
 		
 		request.setAttribute("pagingVo", vo);
 		////////////////////////////////////////////////////////////////////
+		list = new BoardRepository().findAll(currentPage, vo.getPageCount(), keyWord);
 		
-		List<BoardVo> list = new BoardRepository().findAll(currentPage, vo.getPageCount());
+		request.setAttribute("keyWord", keyWord);
 		request.setAttribute("list", list);	
 		
 		WebUtil.forward(request, response, "board/index");
