@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.douzone.mysite.vo.guestbookVo;
+import com.douzone.mysite.vo.GuestbookVo;
 
 @Repository
 public class GuestbookRepository {
@@ -47,8 +47,8 @@ public class GuestbookRepository {
 		return result;
 	}
 	
-	public List<guestbookVo> findByPassword(Long no) {
-		List<guestbookVo> result = new ArrayList<>();
+	public GuestbookVo findPasswordByNo(Long no) {
+		GuestbookVo result = null;
 		Connection connecion = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -66,16 +66,16 @@ public class GuestbookRepository {
 			rs =pstmt.executeQuery();		
 			
 			// 6. 결과처리
-			while(rs.next()) {
+			if(rs.next()) {
 			
 				String password = rs.getString(1);
 			
 				
-				guestbookVo vo = new guestbookVo();
+				GuestbookVo vo = new GuestbookVo();
 				vo.setPassword(password);
 			
 				
-				result.add(vo);
+				result = vo;
 			}
 			
 		} catch (SQLException e) {
@@ -95,8 +95,8 @@ public class GuestbookRepository {
 		return result;
 	}
 	
-	public List<guestbookVo> findAll() {
-		List<guestbookVo> result = new ArrayList<>();
+	public List<GuestbookVo> findAll() {
+		List<GuestbookVo> result = new ArrayList<>();
 		Connection connecion = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -121,7 +121,7 @@ public class GuestbookRepository {
 				String message = rs.getString(4);	
 				String regDate = rs.getString(5);
 				
-				guestbookVo vo = new guestbookVo();
+				GuestbookVo vo = new GuestbookVo();
 				vo.setNo(no);
 				vo.setName(name);
 				vo.setPassword(password);
@@ -148,7 +148,7 @@ public class GuestbookRepository {
 		return result;
 	}
 	
-	public boolean insert(guestbookVo vo) {
+	public boolean insert(GuestbookVo vo) {
 		boolean result = false;
 		Connection connecion = null;
 		PreparedStatement pstmt = null;
