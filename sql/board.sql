@@ -1,5 +1,7 @@
 -- board
+desc guestbook;
 
+select * from guestbook;
 desc board;
 select * from user;
 

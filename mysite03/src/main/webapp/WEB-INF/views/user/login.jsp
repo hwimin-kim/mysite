@@ -21,7 +21,7 @@
 					
 					<label class="block-label" >패스워드</label>
 					<input name="password" type="password" value="">
-					<c:if test='${result == "fale"}'>
+					<c:if test='${result == "fail"}'>
 							<p>
 								로그인이 실패 했습니다.
 							</p>
