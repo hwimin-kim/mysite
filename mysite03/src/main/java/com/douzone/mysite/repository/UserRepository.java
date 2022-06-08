@@ -6,15 +6,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.douzone.mysite.vo.UserVo;
 
 @Repository
 public class UserRepository {
-	private static final String ID = "webdb";
-	private static final String PASSWORD = "webdb";
-	
+	@Autowired
+	private DataSource dataSource;
+
 	public UserVo findByno(Long authUserNo) {
 		UserVo result = null;
 		
@@ -23,7 +26,7 @@ public class UserRepository {
 		ResultSet rs = null;
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			
 			// 3. SQL 준비
 			String sql = " select no, name, email, gender from user where no = ?";
@@ -75,7 +78,7 @@ public class UserRepository {
 		ResultSet rs = null;
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			
 			// 3. SQL 준비
 			String sql = "select no, name from user where email = ? and password = ?";
@@ -124,7 +127,7 @@ public class UserRepository {
 		PreparedStatement pstmt = null;
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			
 			String sql = "insert into user values(null, ?, ?, ?, ?, now())";
 			pstmt = connecion.prepareStatement(sql);
@@ -164,7 +167,7 @@ public class UserRepository {
 			PreparedStatement pstmt = null;
 			
 			try {
-				connecion = getConnection();
+				connecion = dataSource.getConnection();
 				
 				String sql = "update user set name = ?, gender = ? where no = ?";
 				pstmt = connecion.prepareStatement(sql);
@@ -198,7 +201,7 @@ public class UserRepository {
 		PreparedStatement pstmt = null;
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			
 			String sql = "update user set name = ?, password = ?, gender = ? where no = ?";
 			pstmt = connecion.prepareStatement(sql);
@@ -224,19 +227,5 @@ public class UserRepository {
 			}
 		}
 		return result;
-	}
-
-	
-	private Connection getConnection() throws SQLException {
-		Connection connecion = null;
-		
-		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-			String url = "jdbc:mysql://192.168.10.40:3306/webdb?charset=utf8";
-			connecion = DriverManager.getConnection(url, ID, PASSWORD);
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
-		}	
-		return connecion;
 	}
 }

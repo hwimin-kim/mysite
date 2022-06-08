@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.douzone.mysite.exception.GuestbookRepositoryException;
@@ -15,8 +18,8 @@ import com.douzone.mysite.vo.GuestbookVo;
 
 @Repository
 public class GuestbookRepository {
-	private static final String ID = "webdb";
-	private static final String PASSWORD = "webdb";
+	@Autowired
+	private DataSource dataSource;
 	
 	public boolean delete(long no) {
 		boolean result = false;
@@ -24,7 +27,7 @@ public class GuestbookRepository {
 		PreparedStatement pstmt = null;
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			
 			String sql = "delete from guestbook where no = ?";
 			pstmt = connecion.prepareStatement(sql);	
@@ -55,7 +58,7 @@ public class GuestbookRepository {
 		ResultSet rs = null;
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			
 			// 3. SQL 준비
 			String sql = "select password from guestbook where no = ?";
@@ -103,7 +106,7 @@ public class GuestbookRepository {
 		ResultSet rs = null;
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			
 			// 3. SQL 준비
 			String sql = "select no, name, password, message, date_format(reg_date, '%Y/%m/%d %H:%i:%s') as reg_date from guestbook order by reg_date desc";
@@ -155,9 +158,9 @@ public class GuestbookRepository {
 		PreparedStatement pstmt = null;
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			
-			String sql = "inser into guestbook values(null, ?, ?, ?, now())";
+			String sql = "insert into guestbook values(null, ?, ?, ?, now())";
 			pstmt = connecion.prepareStatement(sql);
 			
 			pstmt.setString(1, vo.getName());
@@ -181,18 +184,5 @@ public class GuestbookRepository {
 			}
 		}
 		return result;
-	}
-	
-	private Connection getConnection() throws SQLException {
-		Connection connecion = null;
-		
-		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-			String url = "jdbc:mysql://192.168.10.40:3306/webdb?charset=utf8";
-			connecion = DriverManager.getConnection(url, ID, PASSWORD);
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
-		}	
-		return connecion;
 	}
 }
