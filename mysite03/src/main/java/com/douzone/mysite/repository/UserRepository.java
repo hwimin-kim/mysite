@@ -24,7 +24,7 @@ public class UserRepository {
 		return sqlSession.insert("user.insert", vo) == 1;
 	}
 	
-	public boolean updateByno(UserVo vo) {	
+	public boolean update(UserVo vo) {	
 		return sqlSession.update("user.update", vo) == 1;
 	}
 }

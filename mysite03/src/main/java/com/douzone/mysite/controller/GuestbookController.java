@@ -39,7 +39,8 @@ public class GuestbookController {
 			@PathVariable("no") Long no,
 			@RequestParam(value="password", required=true, defaultValue="") String password) {
 		
-		return guestbookService.deleteMessage(no, password) ? "redirect:/guestbook" : "redirect:/guestbook/delete/"+no;
+		guestbookService.deleteMessage(no, password);
+		return "redirect:/guestbook";
 	}
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)

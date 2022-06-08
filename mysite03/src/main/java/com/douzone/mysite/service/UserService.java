@@ -24,6 +24,6 @@ public class UserService {
 	}
 
 	public void updateUser(UserVo vo) {
-		userRepository.updateByno(vo);
+		userRepository.update(vo);
 	}
 }

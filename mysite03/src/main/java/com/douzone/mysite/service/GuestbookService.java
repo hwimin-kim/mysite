@@ -19,14 +19,7 @@ public class GuestbookService {
 	}
 	
 	public Boolean deleteMessage(Long no, String password) {
-		GuestbookVo vo = guestbookRepository.findPasswordByNo(no);
-		
-		if(vo.getPassword().equals(password)) {
-			guestbookRepository.delete(no);
-			return true;
-		}
-		else
-			return false;
+		return guestbookRepository.delete(no, password);
 	}
 	
 	public Boolean addMessage(GuestbookVo vo) {
