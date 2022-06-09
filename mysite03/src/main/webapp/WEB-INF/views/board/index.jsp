@@ -14,9 +14,9 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="${pageContext.servletContext.contextPath }/board" method="post">
-					<input type="text" id="kwd" name="kwd" value="" placeholder="${keyWord }">
-					<input type="hidden" id="page" name="page" value="1">
+				<form id="search_form" action="${pageContext.servletContext.contextPath }/board/1" method="post">
+					<input type="text" id="keyWord" name="keyWord" value="" placeholder="${keyWord }">
+					<!-- <input type="hidden" id="page" name="page" value="1"> -->
 					<input type="submit" value="찾기">
 				</form>
 				<table class="tbl-ex">
@@ -38,11 +38,11 @@
 							</c:if>
 								<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no}">${vo.title }</a>
 						</td>
-						<td>${vo.userName }</td>
+						<td>${vo.name }</td>
 						<td>${vo.hit }</td>
 						<td>${vo.regDate }</td>
-						<c:if test="${vo.userNo eq authUser.no}">
-								<td><a href="${pageContext.servletContext.contextPath }/board?a=delete&no=${vo.no}" class="del">삭제</a></td>
+						<c:if test="${vo.user_no eq authUser.no}">
+								<td><a href="${pageContext.servletContext.contextPath }/board/delete/${vo.no}" class="del">삭제</a></td>
 						</c:if>
 					</tr>
 					</c:forEach>

@@ -4,7 +4,7 @@
 <mapper namespace="board">
 		<select id="findCount" parameterType="string" resultType="integer">
 				<choose>
-						<when test='_parameter == "%null%"'>
+						<when test='_parameter == null'>
 								<![CDATA[
 								select count(*)
 									from board
@@ -22,26 +22,8 @@
 		</select>
 		
 			<select id="findAll" parameterType="map" resultType="boardvo">
-	<!-- 				<![CDATA[
-								select a.no,
-											 a.title,
-											 a.contents,
-											 a.hit,
-											 date_format(a.reg_date, '%Y/%m/%d %H:%i:%s') as regDate,
-											 a.g_no,
-											 a.o_no,
-											 a.depth,
-											 a.user_no,
-											 b.name
-									from board a,
-											 user b
-								where a.user_no = b.no
-									and a.title like #{keyWord}
-								order by g_no desc, o_no asc
-									limit #{currentPage}, #{pageCount}
-								]]> -->
 				<choose>
-						<when test='_parameter.keyWord == "%null%"'>
+						<when test='_parameter.keyWord == null'>
 								<![CDATA[
 								select a.no,
 											 a.title,
@@ -82,4 +64,12 @@
 						</otherwise>
 				</choose>
 		</select>
+		
+		<delete id="delete" parameterType="long">
+				<![CDATA[
+				delete
+					from board
+				where no=#{no }
+				]]>
+		</delete>
 </mapper>

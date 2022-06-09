@@ -26,7 +26,6 @@ public class BoardService {
 		
 		pagingVo.setMinPage(1);
 		pagingVo.setPageCount(5);
-		System.out.println("갯수: "+boardRepository.findCount(keyWord));
 		pagingVo.setListCount(boardRepository.findCount(keyWord));
 		pagingVo.calcMaxPage();
 		
@@ -47,5 +46,9 @@ public class BoardService {
 			pagingVo.calcPage();		
 		}
 		return pagingVo;
+	}
+
+	public void deleteMessage(Long no) {
+		boardRepository.delete(no);
 	}
 }
