@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+		<select id="findCount" parameterType="string" resultType="integer">
+				<choose>
+						<when test='_parameter == "%null%"'>
+								<![CDATA[
+								select count(*)
+									from board
+								]]>
+						</when>
+			
+						<otherwise>
+								<![CDATA[
+								select count(*)
+									from board
+								where title like #{_parameter } or contents like #{_parameter }
+								]]>
+						</otherwise>
+				</choose>
+		</select>
+		
+			<select id="findAll" parameterType="map" resultType="boardvo">
+	<!-- 				<![CDATA[
+								select a.no,
+											 a.title,
+											 a.contents,
+											 a.hit,
+											 date_format(a.reg_date, '%Y/%m/%d %H:%i:%s') as regDate,
+											 a.g_no,
+											 a.o_no,
+											 a.depth,
+											 a.user_no,
+											 b.name
+									from board a,
+											 user b
+								where a.user_no = b.no
+									and a.title like #{keyWord}
+								order by g_no desc, o_no asc
+									limit #{currentPage}, #{pageCount}
+								]]> -->
+				<choose>
+						<when test='_parameter.keyWord == "%null%"'>
+								<![CDATA[
+								select a.no,
+											 a.title,
+											 a.contents,
+											 a.hit,
+											 date_format(a.reg_date, '%Y/%m/%d %H:%i:%s') as regDate,
+											 a.g_no,
+											 a.o_no,
+											 a.depth,
+											 a.user_no,
+											 b.name
+									from board a,
+											 user b
+								where a.user_no = b.no
+									order by g_no desc, o_no asc
+								limit #{_parameter.currentPage}, #{_parameter.pageCount}
+								]]>
+						</when>
+						<otherwise>
+								<![CDATA[
+								select a.no,
+											 a.title,
+											 a.contents,
+											 a.hit,
+											 date_format(a.reg_date, '%Y/%m/%d %H:%i:%s') as regDate,
+											 a.g_no,
+											 a.o_no,
+											 a.depth,
+											 a.user_no,
+											 b.name
+									from board a,
+											 user b
+								where a.user_no = b.no
+									and a.title like #{_parameter.keyWord}
+								order by g_no desc, o_no asc
+									limit #{_parameter.currentPage}, #{_parameter.pageCount}
+								]]>
+						</otherwise>
+				</choose>
+		</select>
+</mapper>

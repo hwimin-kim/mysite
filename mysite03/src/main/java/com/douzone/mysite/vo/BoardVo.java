@@ -79,6 +79,4 @@ public class BoardVo {
 				+ regDate + ", groupNo=" + groupNo + ", otherNo=" + otherNo + ", depth=" + depth + ", uerNo=" + userNo
 				+ ", userName=" + userName + "]";
 	}
-
-	
 }

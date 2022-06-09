@@ -52,10 +52,10 @@
 				<div class="pager">
 					<ul>
 						<c:if test="${pagingVo.minPage < pagingVo.currentPage and empty keyWord}">
-								<li><a href="${pageContext.servletContext.contextPath }/board?page=${pagingVo.currentPage -1 }">◀</a></li>
+								<li><a href="${pageContext.servletContext.contextPath }/board/${pagingVo.currentPage -1 }">◀</a></li>
 						</c:if>
 						<c:if test="${pagingVo.minPage < pagingVo.currentPage and not empty keyWord}">
-								<li><a href="${pageContext.servletContext.contextPath }/board?page=${pagingVo.currentPage -1 }&kwd=${keyWord }">◀</a></li>
+								<li><a href="${pageContext.servletContext.contextPath }/board/${pagingVo.currentPage -1 }/${keyWord }">◀</a></li>
 						</c:if>
 						<c:forEach var="i" begin="${pagingVo.startPage}" end="${pagingVo.endPage}">
 						<c:choose>
@@ -66,18 +66,18 @@
 										<li>${i }</li>
 								</c:when>
 								<c:when test="${empty keyWord}">
-										<li><a href="${pageContext.servletContext.contextPath }/board?page=${i }">${i }</a></li>
+										<li><a href="${pageContext.servletContext.contextPath }/board/${i }">${i }</a></li>
 								</c:when>
 								<c:otherwise>
-										<li><a href="${pageContext.servletContext.contextPath }/board?page=${i }&kwd=${keyWord }">${i }</a></li>
+										<li><a href="${pageContext.servletContext.contextPath }/board/${i }/${keyWord }">${i }</a></li>
 								</c:otherwise>				
 						</c:choose>
 						</c:forEach>
 						<c:if test="${pagingVo.maxPage > pagingVo.currentPage and empty keyWord}">
-								<li><a href="${pageContext.servletContext.contextPath }/board?page=${pagingVo.currentPage +1 }">▶</a></li>
+								<li><a href="${pageContext.servletContext.contextPath }/board/${pagingVo.currentPage +1 }">▶</a></li>
 						</c:if>
 						<c:if test="${pagingVo.maxPage > pagingVo.currentPage and not empty keyWord}">
-								<li><a href="${pageContext.servletContext.contextPath }/board?page=${pagingVo.currentPage +1 }&kwd=${keyWord }">▶</a></li>
+								<li><a href="${pageContext.servletContext.contextPath }/board/${pagingVo.currentPage +1 }/${keyWord }">▶</a></li>
 						</c:if>	
 					</ul>
 				</div>					

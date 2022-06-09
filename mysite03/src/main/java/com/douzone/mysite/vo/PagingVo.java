@@ -1,5 +1,8 @@
 package com.douzone.mysite.vo;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class PagingVo {
 	private int startPage;
 	private int endPage;

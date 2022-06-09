@@ -1,66 +1,76 @@
 package com.douzone.mysite.repository;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.sql.DataSource;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.douzone.mysite.vo.BoardVo;
+import com.douzone.mysite.vo.PagingVo;
 
 @Repository
 public class BoardRepository {
-	private static final String ID = "webdb";
-	private static final String PASSWORD = "webdb";
+	@Autowired
+	private SqlSession sqlSession;
+	
+	@Autowired
+	private DataSource dataSource;
 
 	public int findCount(String keyWord) {
-		int result = 0;
-		Connection connecion = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
-		try {
-			connecion = getConnection();
-			
-			if(keyWord == null) {
-				// 3. SQL 준비
-				String sql = "select count(*) from board";
-				pstmt = connecion.prepareStatement(sql);
-			} else {
-				String sql = "select count(*) from board where title like ?";
-				pstmt = connecion.prepareStatement(sql);
-				
-				// 4. Parameter Mapping
-				pstmt.setString(1, "%"+keyWord+"%");
-			}	
-			// 5. SQL 실행
-			rs =pstmt.executeQuery();		
-			
-			// 6. 결과처리
-			if(rs.next()) 
-				result = rs.getInt(1);
-	
-			
-			
-		} catch (SQLException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
-		} finally {
-			try {
-				if(rs != null)
-					rs.close();
-				if(pstmt != null)
-					pstmt.close();
-				if(connecion != null)
-					connecion.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return result;
+//		int result = 0;
+//		Connection connecion = null;
+//		PreparedStatement pstmt = null;
+//		ResultSet rs = null;
+//		
+//		try {
+//			connecion = dataSource.getConnection();
+//			
+//			if(keyWord == null) {
+//				// 3. SQL 준비
+//				String sql = "select count(*) from board";
+//				pstmt = connecion.prepareStatement(sql);
+//			} else {
+//				String sql = "select count(*) from board where title like ?";
+//				pstmt = connecion.prepareStatement(sql);
+//				
+//				// 4. Parameter Mapping
+//				pstmt.setString(1, "%"+keyWord+"%");
+//			}	
+//			// 5. SQL 실행
+//			rs =pstmt.executeQuery();		
+//			
+//			// 6. 결과처리
+//			if(rs.next()) 
+//				result = rs.getInt(1);
+//	
+//			
+//			
+//		} catch (SQLException e) {
+//			System.out.println("드라이버 로딩 실패:" + e);
+//		} finally {
+//			try {
+//				if(rs != null)
+//					rs.close();
+//				if(pstmt != null)
+//					pstmt.close();
+//				if(connecion != null)
+//					connecion.close();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		System.out.println("%"+keyWord+"%");
+		return sqlSession.selectOne("board.findCount", "%"+keyWord+"%");
 	}
 	
 	public BoardVo findByNo(String no) {
@@ -70,7 +80,7 @@ public class BoardRepository {
 		ResultSet rs = null;
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			
 			// 3. SQL 준비
 			String sql = "select title, contents, g_no, o_no, depth from board where no = ?";
@@ -118,78 +128,85 @@ public class BoardRepository {
 		return result;
 	}
 
-	public List<BoardVo> findAll(int page, int pageCount, String keyWord) {
-		List<BoardVo> result = new ArrayList<>();
-		Connection connecion = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		Long currentPage = Long.valueOf((page-1)*pageCount);
+	public List<BoardVo> findAll(PagingVo pagingVo, String keyWord) {
+//		List<BoardVo> result = new ArrayList<>();
+//		Connection connecion = null;
+//		PreparedStatement pstmt = null;
+//		ResultSet rs = null;
+//		Long currentPage = Long.valueOf((pagingVo.getCurrentPage()-1)*pagingVo.getPageCount());
+//		
+//		try {
+//			connecion = dataSource.getConnection();
+//			
+//			if(keyWord != null) {
+//				// 3. SQL 준비
+//				String sql = "select a.no, a.title, a.contents, a.hit, date_format(a.reg_date, '%Y/%m/%d %H:%i:%s') as reg_date, a.g_no, a.o_no, a.depth, a.user_no, b.name from board a, user b where a.user_no = b.no and a.title like ? order by g_no desc, o_no asc limit ?, ?";
+//				pstmt = connecion.prepareStatement(sql);
+//			
+//				// 4. Parameter Mapping
+//				pstmt.setString(1, "%"+keyWord+"%");
+//				pstmt.setLong(2, currentPage);
+//				pstmt.setLong(3, Long.valueOf(pagingVo.getPageCount()));
+//			} else {
+//				String sql = "select a.no, a.title, a.contents, a.hit, date_format(a.reg_date, '%Y/%m/%d %H:%i:%s') as reg_date, a.g_no, a.o_no, a.depth, a.user_no, b.name from board a, user b where a.user_no = b.no order by g_no desc, o_no asc limit ?, ?";
+//				pstmt = connecion.prepareStatement(sql);
+//				
+//				pstmt.setLong(1, currentPage);
+//				pstmt.setLong(2, Long.valueOf(pagingVo.getPageCount()));
+//			}
+//			// 5. SQL 실행
+//			rs =pstmt.executeQuery();		
+//			
+//			// 6. 결과처리
+//			while(rs.next()) {
+//				Long no =  rs.getLong(1);
+//				String title = rs.getString(2);
+//				String contents = rs.getString(3);
+//				Long hit = rs.getLong(4);	
+//				String regDate = rs.getString(5);
+//				Long groupNo = rs.getLong(6);
+//				Long otherNo = rs.getLong(7);
+//				Long depth = rs.getLong(8);
+//				Long userNo = rs.getLong(9);
+//				String userName = rs.getString(10);
+//				
+//				BoardVo vo = new BoardVo();
+//				vo.setNo(no);
+//				vo.setTitle(title);
+//				vo.setContents(contents);
+//				vo.setHit(hit);
+//				vo.setRegDate(regDate);
+//				vo.setGroupNo(groupNo);
+//				vo.setOtherNo(otherNo);
+//				vo.setDepth(depth);
+//				vo.setUserNo(userNo);
+//				vo.setUserName(userName);
+//				
+//				result.add(vo);
+//			}
+//			
+//		} catch (SQLException e) {
+//			System.out.println("드라이버 로딩 실패:" + e);
+//		} finally {
+//			try {
+//				if(rs != null)
+//					rs.close();
+//				if(pstmt != null)
+//					pstmt.close();
+//				if(connecion != null)
+//					connecion.close();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		return result;
 		
-		try {
-			connecion = getConnection();
-			
-			if(keyWord != null) {
-				// 3. SQL 준비
-				String sql = "select a.no, a.title, a.contents, a.hit, date_format(a.reg_date, '%Y/%m/%d %H:%i:%s') as reg_date, a.g_no, a.o_no, a.depth, a.user_no, b.name from board a, user b where a.user_no = b.no and a.title like ? order by g_no desc, o_no asc limit ?, ?";
-				pstmt = connecion.prepareStatement(sql);
-			
-				// 4. Parameter Mapping
-				pstmt.setString(1, "%"+keyWord+"%");
-				pstmt.setLong(2, currentPage);
-				pstmt.setLong(3, Long.valueOf(pageCount));
-			} else {
-				String sql = "select a.no, a.title, a.contents, a.hit, date_format(a.reg_date, '%Y/%m/%d %H:%i:%s') as reg_date, a.g_no, a.o_no, a.depth, a.user_no, b.name from board a, user b where a.user_no = b.no order by g_no desc, o_no asc limit ?, ?";
-				pstmt = connecion.prepareStatement(sql);
-				
-				pstmt.setLong(1, currentPage);
-				pstmt.setLong(2, Long.valueOf(pageCount));
-			}
-			// 5. SQL 실행
-			rs =pstmt.executeQuery();		
-			
-			// 6. 결과처리
-			while(rs.next()) {
-				Long no =  rs.getLong(1);
-				String title = rs.getString(2);
-				String contents = rs.getString(3);
-				Long hit = rs.getLong(4);	
-				String regDate = rs.getString(5);
-				Long groupNo = rs.getLong(6);
-				Long otherNo = rs.getLong(7);
-				Long depth = rs.getLong(8);
-				Long userNo = rs.getLong(9);
-				String userName = rs.getString(10);
-				
-				BoardVo vo = new BoardVo();
-				vo.setNo(no);
-				vo.setTitle(title);
-				vo.setContents(contents);
-				vo.setHit(hit);
-				vo.setRegDate(regDate);
-				vo.setGroupNo(groupNo);
-				vo.setOtherNo(otherNo);
-				vo.setDepth(depth);
-				vo.setUserNo(userNo);
-				vo.setUserName(userName);
-				
-				result.add(vo);
-			}
-			
-		} catch (SQLException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
-		} finally {
-			try {
-				if(rs != null)
-					rs.close();
-				if(pstmt != null)
-					pstmt.close();
-				if(connecion != null)
-					connecion.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return result;
+		Map<String, Object> map = new HashMap<>();
+		map.put("keyWord", "%"+keyWord+"%");
+		map.put("currentPage", Long.valueOf((pagingVo.getCurrentPage()-1)*pagingVo.getPageCount()));
+		map.put("pageCount", Long.valueOf(pagingVo.getPageCount()));
+		
+		return sqlSession.selectList("board.findAll", map);
 	}
 	
 	public List<BoardVo> findAll2(int page, int pageCount) {
@@ -200,7 +217,7 @@ public class BoardRepository {
 		Long currentPage = Long.valueOf((page-1)*pageCount);
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			
 			// 3. SQL 준비
 			String sql = "select a.no, a.title, a.contents, a.hit, date_format(a.reg_date, '%Y/%m/%d %H:%i:%s') as reg_date, a.g_no, a.o_no, a.depth, a.user_no, b.name from board a, user b where a.user_no = b.no order by g_no desc, o_no asc limit ?, ?";
@@ -263,7 +280,7 @@ public class BoardRepository {
 		PreparedStatement pstmt = null;
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			System.out.println(vo.getGroupNo());
 			if(vo.getGroupNo() == null ) {
 				String sql = "insert into board values(null, ?, ?, 1, now(), (select IF(ISNULL(g_no), 1, MAX(g_no) +1) from board t), 1, 1, ?)";
@@ -307,7 +324,7 @@ public class BoardRepository {
 		PreparedStatement pstmt = null;
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			
 			String sql = "update board set hit = hit + 1 where no = ?";
 			pstmt = connecion.prepareStatement(sql);
@@ -338,7 +355,7 @@ public class BoardRepository {
 		PreparedStatement pstmt = null;
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			
 			String sql = "update board set title = ?, contents = ? where no = ?";
 			pstmt = connecion.prepareStatement(sql);
@@ -371,7 +388,7 @@ public class BoardRepository {
 		PreparedStatement pstmt = null;
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			
 			String sql = "update board set o_no = o_no + 1 where g_no = ? and o_no >= ?";
 			pstmt = connecion.prepareStatement(sql);
@@ -403,7 +420,7 @@ public class BoardRepository {
 		PreparedStatement pstmt = null;
 		
 		try {
-			connecion = getConnection();
+			connecion = dataSource.getConnection();
 			
 			String sql = "delete from board where no = ?";
 			pstmt = connecion.prepareStatement(sql);
@@ -428,16 +445,4 @@ public class BoardRepository {
 		return result;
 	}
 	
-	private Connection getConnection() throws SQLException {
-		Connection connecion = null;
-		
-		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-			String url = "jdbc:mysql://192.168.10.40:3306/webdb?charset=utf8";
-			connecion = DriverManager.getConnection(url, ID, PASSWORD);
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
-		}	
-		return connecion;
-	}
 }
