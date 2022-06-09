@@ -9,6 +9,8 @@ import java.util.Calendar;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.douzone.mysite.exception.FileUploadException;
+
 @Service
 public class FileUploadService {
 	
@@ -44,7 +46,7 @@ public class FileUploadService {
 			url = URL_BASE + "/" + restoreFilename;
 			
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new FileUploadException(e);
 		}
 		
 		return url;
