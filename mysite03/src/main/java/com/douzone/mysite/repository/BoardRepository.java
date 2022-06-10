@@ -41,7 +41,6 @@ public class BoardRepository {
 	
 	public void insert(BoardVo vo) {
 		int num = sqlSession.insert("board.insert", vo);
-		System.out.println("성공: " + num);
 	}
 	
 	public void update(BoardVo vo) {

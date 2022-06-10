@@ -14,7 +14,7 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form class="board-form" method="post" action="${pageContext.request.contextPath}/board/reply/${vo.no }">
+				<form class="board-form" method="post" action="${pageContext.request.contextPath}/board/reply/${no }">
 					<table class="tbl-ex">
 						<tr>
 							<th colspan="2">글쓰기</th>
@@ -26,7 +26,7 @@
 						<tr>
 							<td class="label">내용</td>
 							<td>
-								<textarea id="content" name="content" required></textarea>
+								<textarea id="content" name="contents" required></textarea>
 							</td>
 						</tr>
 					</table>

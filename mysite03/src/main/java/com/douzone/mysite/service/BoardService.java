@@ -12,9 +12,6 @@ import com.douzone.mysite.vo.UserVo;
 
 @Service
 public class BoardService {
-//	@Autowired
-//	private BoardVo boardVo;
-	
 	@Autowired
 	private BoardRepository boardRepository;
 	
@@ -63,42 +60,24 @@ public class BoardService {
 		boardRepository.insert(vo);
 	}
 
-	// 답글달기 페이지 정보 가져오기
-	public BoardVo getMessage(Long no) {
+	// 해당 게시판 정보
+	public BoardVo getMessageBoard(Long no) {
 		return boardRepository.findByNo(no);
 	}
 
 	// 답글달기
-	public void addMessage(Long g_no, Long o_no, Long depth, String title, String content, UserVo authUser) {
-		BoardVo boardVo = new BoardVo();
-		boardVo.setG_no(g_no);
-		boardVo.setO_no(o_no += 1);
-		boardVo.setDepth(depth += 1);
-		boardRepository.update(boardVo);
-		
-		boardVo.setTitle(title);
-		boardVo.setContents(content);
-		boardVo.setUser_no(authUser.getNo());
-		boardRepository.insert(boardVo);
-		
-		
-		System.out.println("답글 달기 서비스:" + boardVo);
+	public void addReplyMessage(BoardVo vo) {
+		boardRepository.update(vo);
+		boardRepository.insert(vo);
 	}
 
-	// 글 수정
-	public void updateMessage(Long no, String title, String content) {
-		BoardVo boardVo = new BoardVo();
-		boardVo.setNo(no);
-		boardVo.setTitle(title);
-		boardVo.setContents(content);
-		
-		System.out.println("글 수정:" + boardVo);
-		
-		boardRepository.update(boardVo);
+	// 글 수정 no/title/contents
+	public void updateMessage(BoardVo vo) {		
+		boardRepository.update(vo);
 	}
 
 	// 조회수
-	public void updateMessage(Long no) {
+	public void updateHitMessage(Long no) {
 		BoardVo boardVo = new BoardVo();
 		boardVo.setNo(no);
 		boardRepository.update(boardVo);

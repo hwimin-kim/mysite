@@ -74,11 +74,11 @@ public class BoardController {
 	
 	@RequestMapping(value="/view/{no}", method=RequestMethod.GET)
 	public String view(@PathVariable("no") Long no, Model model, HttpSession session) {
-		BoardVo vo= boardService.getMessage(no);
+		BoardVo vo= boardService.getMessageBoard(no);
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
 		
 		// hit update
-		boardService.updateMessage(no);
+		boardService.updateHitMessage(no);
 		
 		model.addAttribute("vo", vo);
 		model.addAttribute("authUser", authUser);
@@ -87,42 +87,39 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="/reply/{no}", method=RequestMethod.GET)
-	public String reply(@PathVariable("no") Long no, Model model) {
-		BoardVo vo= boardService.getMessage(no);
-		
-		model.addAttribute("vo", vo);
+	public String reply(@PathVariable("no") Long no, Model model) {		
+		model.addAttribute("no", no);
 		
 		return "board/reply";
 	}
 	
 	@RequestMapping(value="/reply/{no}", method=RequestMethod.POST)
-	public String reply(
-						@PathVariable("no") Long no,
-						@RequestParam(value="title", required=true, defaultValue="") String title,
-						@RequestParam(value="content", required=true, defaultValue="") String content,
-						HttpSession session) {
-		BoardVo vo= boardService.getMessage(no);
+	public String reply(@PathVariable("no") Long no, BoardVo replyVo, HttpSession session) {
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
+		BoardVo vo= boardService.getMessageBoard(no);
+		vo.setTitle(replyVo.getTitle());
+		vo.setContents(replyVo.getContents());
+		vo.setUser_no(authUser.getNo());
+		vo.setO_no(vo.getO_no() + 1);
+		vo.setDepth(vo.getDepth() + 1);
 		
-		boardService.addMessage(vo.getG_no(), vo.getO_no(), vo.getDepth(), title, content, authUser);
+		boardService.addReplyMessage(vo);
 		
 		return "redirect:/board";
 	}
 	
 	@RequestMapping(value="/modify/{no}", method=RequestMethod.GET)
 	public String modify(@PathVariable("no") Long no, Model model) {
-		BoardVo vo= boardService.getMessage(no);
+		BoardVo vo= boardService.getMessageBoard(no);
 		model.addAttribute("vo", vo);
 		
 		return "board/modify";
 	}
 	
 	@RequestMapping(value="/modify/{no}", method=RequestMethod.POST)
-	public String modify(
-						@PathVariable("no") Long no,
-						@RequestParam("title") String title,
-						@RequestParam("content") String content) {
-		boardService.updateMessage(no, title, content);
+	public String modify(@PathVariable("no") Long no, BoardVo vo) {
+		vo.setNo(no);
+		boardService.updateMessage(vo);
 		
 		return "redirect:/board";
 	}
