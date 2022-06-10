@@ -34,9 +34,12 @@
 				</table>
 				<div class="bottom">
 							<a href="${pageContext.servletContext.contextPath }/board">글목록</a>
+					<c:if test="${authUser.no eq vo.user_no }">
+							<a href="${pageContext.servletContext.contextPath }/board/modify/${vo.no}">글수정</a>
+					</c:if>		
 					<c:if test="${not empty authUser }">
-							<a href="${pageContext.servletContext.contextPath }/board?a=modifyform&no=${no}">글수정</a>
-							<a href="${pageContext.servletContext.contextPath }/board?a=replyform&gno=${vo.groupNo}&ono=${vo.otherNo}&dep=${vo.depth}">답글달기</a>
+							<a href="${pageContext.servletContext.contextPath }/board/reply/${vo.no }">답글달기</a>
+							<%-- <a href="${pageContext.servletContext.contextPath }/board/reply/${vo.g_no}/${vo.o_no}/${vo.depth}">답글달기</a> --%>
 					</c:if>
 				</div>
 			</div>

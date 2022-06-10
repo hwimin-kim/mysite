@@ -36,7 +36,7 @@
 							<c:if test="${vo.depth != 1}">
 								<img src='${pageContext.servletContext.contextPath }/assets/images/reply.png' />
 							</c:if>
-								<a href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no}">${vo.title }</a>
+								<a href="${pageContext.servletContext.contextPath }/board/view/${vo.no}">${vo.title }</a>
 						</td>
 						<td>${vo.name }</td>
 						<td>${vo.hit }</td>
@@ -85,7 +85,7 @@
 				
 				<div class="bottom">
 						<c:if test="${not empty authUser }">
-								<a href="${pageContext.servletContext.contextPath }/board?a=writeform" id="new-book">글쓰기</a>
+								<a href="${pageContext.servletContext.contextPath }/board/write" id="new-book">글쓰기</a>
 						</c:if>
 				</div>				
 			</div>

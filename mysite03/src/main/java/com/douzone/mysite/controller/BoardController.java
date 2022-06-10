@@ -26,22 +26,20 @@ public class BoardController {
 	
 	@RequestMapping(value={"", "/{no}","/{no}/{keyWord}"}, method=RequestMethod.GET)
 	public String index(
-		@PathVariable(value="no", required=false) String no,
-		@PathVariable(value="keyWord", required=false) String keyWord,
-		Model model,
-		HttpSession session) {
-			
+						@PathVariable(value="no", required=false) String no,
+						@PathVariable(value="keyWord", required=false) String keyWord,
+						Model model,
+						HttpSession session) {	
 		PagingVo pagingVo =  boardService.getMessagePaging(no, keyWord);
-		List<BoardVo> list = boardService.getMessageList(pagingVo, keyWord);
-		for(BoardVo vo : list)
-		System.out.println(vo);
+		List<BoardVo> list = boardService.getMessageList(pagingVo, keyWord);	
+		
 		model.addAttribute("pagingVo", pagingVo);
 		model.addAttribute("keyWord", keyWord);
 		model.addAttribute("list", list);
 		
 		// 접근 제어(Access Control)
 		UserVo authUser = (UserVo) session.getAttribute("authUser");	
-		System.out.println(authUser);
+	
 		model.addAttribute("authUser", authUser);
 		
 		return "board/index";
@@ -54,8 +52,77 @@ public class BoardController {
 	
 	@RequestMapping(value="/delete/{no}", method=RequestMethod.GET)
 	public String delete(@PathVariable("no") Long no) {
-		
 		boardService.deleteMessage(no);
+		
+		return "redirect:/board";
+	}
+	
+	@RequestMapping(value="/write", method=RequestMethod.GET)
+	public String write() {
+		return "board/write";
+	}
+	
+	@RequestMapping(value="/write", method=RequestMethod.POST)
+	public String write(BoardVo vo, HttpSession session) {
+		UserVo authUser = (UserVo) session.getAttribute("authUser");
+		vo.setUser_no(authUser.getNo());
+
+		boardService.addMessage(vo);
+		
+		return "redirect:/board";
+	}
+	
+	@RequestMapping(value="/view/{no}", method=RequestMethod.GET)
+	public String view(@PathVariable("no") Long no, Model model, HttpSession session) {
+		BoardVo vo= boardService.getMessage(no);
+		UserVo authUser = (UserVo) session.getAttribute("authUser");
+		
+		// hit update
+		boardService.updateMessage(no);
+		
+		model.addAttribute("vo", vo);
+		model.addAttribute("authUser", authUser);
+		
+		return "board/view";
+	}
+	
+	@RequestMapping(value="/reply/{no}", method=RequestMethod.GET)
+	public String reply(@PathVariable("no") Long no, Model model) {
+		BoardVo vo= boardService.getMessage(no);
+		
+		model.addAttribute("vo", vo);
+		
+		return "board/reply";
+	}
+	
+	@RequestMapping(value="/reply/{no}", method=RequestMethod.POST)
+	public String reply(
+						@PathVariable("no") Long no,
+						@RequestParam(value="title", required=true, defaultValue="") String title,
+						@RequestParam(value="content", required=true, defaultValue="") String content,
+						HttpSession session) {
+		BoardVo vo= boardService.getMessage(no);
+		UserVo authUser = (UserVo) session.getAttribute("authUser");
+		
+		boardService.addMessage(vo.getG_no(), vo.getO_no(), vo.getDepth(), title, content, authUser);
+		
+		return "redirect:/board";
+	}
+	
+	@RequestMapping(value="/modify/{no}", method=RequestMethod.GET)
+	public String modify(@PathVariable("no") Long no, Model model) {
+		BoardVo vo= boardService.getMessage(no);
+		model.addAttribute("vo", vo);
+		
+		return "board/modify";
+	}
+	
+	@RequestMapping(value="/modify/{no}", method=RequestMethod.POST)
+	public String modify(
+						@PathVariable("no") Long no,
+						@RequestParam("title") String title,
+						@RequestParam("content") String content) {
+		boardService.updateMessage(no, title, content);
 		
 		return "redirect:/board";
 	}

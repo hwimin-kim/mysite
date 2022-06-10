@@ -1,5 +1,8 @@
 package com.douzone.mysite.vo;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class BoardVo {
 	private Long no;
 	private String title;
