@@ -13,6 +13,9 @@ import com.douzone.mysite.vo.UserVo;
 @Service
 public class BoardService {
 	@Autowired
+	private BoardVo boardVo;
+	
+	@Autowired
 	private BoardRepository boardRepository;
 	
 	@Autowired
@@ -60,7 +63,7 @@ public class BoardService {
 		boardRepository.insert(vo);
 	}
 
-	// 해당 게시판 정보
+	// 해당 게시글 정보
 	public BoardVo getMessageBoard(Long no) {
 		return boardRepository.findByNo(no);
 	}
@@ -78,7 +81,6 @@ public class BoardService {
 
 	// 조회수
 	public void updateHitMessage(Long no) {
-		BoardVo boardVo = new BoardVo();
 		boardVo.setNo(no);
 		boardRepository.update(boardVo);
 	}
