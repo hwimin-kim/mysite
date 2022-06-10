@@ -19,6 +19,8 @@
         http://www.springframework.org/schema/util/spring-util.xsd
         http://www.springframework.org/schema/task 
         http://www.springframework.org/schema/task/spring-task.xsd">
+	<!-- Auto Proxy -->
+	<aop:aspectj-autoproxy />
 
 	<!-- DataSource(Connection Pool) -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
@@ -40,7 +42,7 @@
 	</bean>
 	
 	<context:annotation-config />
-	<context:component-scan base-package="com.douzone.mysite.service, com.douzone.mysite.repository, com.douzone.mysite.vo">
+	<context:component-scan base-package="com.douzone.mysite.service, com.douzone.mysite.repository, com.douzone.mysite.aspect, com.douzone.mysite.vo">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository" />
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Component" />			

@@ -1,12 +1,9 @@
 -- board
-desc guestbook;
-
-select * from guestbook;
 desc board;
-select * from user;
 
 -- select
 select * from board;
+select count(*) from board;
 select g_no, o_no, depth from board where no = 1;
 -- update
 
