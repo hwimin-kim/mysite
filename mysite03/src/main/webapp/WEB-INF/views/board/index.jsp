@@ -31,7 +31,7 @@
 					<c:set var='count' value='${fn:length(list)}'/>
 					<c:forEach items='${list }' var='vo' varStatus='status'>
 					<tr>
-						<td>${count-status.index }</td>
+						<td>${totalCount-(pagingVo.currentPage-1)*pagingVo.pageCount-status.index }</td>
 						<td style="text-align:left; padding-left:${(vo.depth-1) *10}px">
 							<c:if test="${vo.depth != 1}">
 								<img src='${pageContext.servletContext.contextPath }/assets/images/reply.png' />
