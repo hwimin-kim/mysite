@@ -29,24 +29,21 @@ public class BoardController {
 						@PathVariable(value="no", required=false) String no,
 						@PathVariable(value="keyWord", required=false) String keyWord,
 						Model model,
-						HttpSession session) {	
+						HttpSession session) {
+		UserVo authUser = (UserVo) session.getAttribute("authUser");	
 		PagingVo pagingVo =  boardService.getMessagePaging(no, keyWord);
 		List<BoardVo> list = boardService.getMessageList(pagingVo, keyWord);	
 		
 		model.addAttribute("pagingVo", pagingVo);
 		model.addAttribute("keyWord", keyWord);
 		model.addAttribute("list", list);
-		
-		// 접근 제어(Access Control)
-		UserVo authUser = (UserVo) session.getAttribute("authUser");	
-	
 		model.addAttribute("authUser", authUser);
 		
 		return "board/index";
 	}
 	
 	@RequestMapping(value="/1", method = RequestMethod.POST)
-	public String index(@RequestParam("keyWord") String keyWord) {	
+	public String index(@RequestParam("keyWord") String keyWord) {
 		return "redirect:/board/1/"+keyWord;
 	}
 	
@@ -56,6 +53,18 @@ public class BoardController {
 		
 		return "redirect:/board";
 	}
+		
+	@RequestMapping(value="/view/{no}", method=RequestMethod.GET)
+	public String view(@PathVariable("no") Long no, Model model, HttpSession session) {
+		BoardVo vo= boardService.getMessageBoard(no);
+		boardService.updateHitMessage(no);
+		UserVo authUser = (UserVo) session.getAttribute("authUser");
+		
+		model.addAttribute("vo", vo);
+		model.addAttribute("authUser", authUser);
+		
+		return "board/view";
+	}
 	
 	@RequestMapping(value="/write", method=RequestMethod.GET)
 	public String write() {
@@ -64,26 +73,15 @@ public class BoardController {
 	
 	@RequestMapping(value="/write", method=RequestMethod.POST)
 	public String write(BoardVo vo, HttpSession session) {
+		// 접근 제어(Access Control)///////////////////////////////////
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
+		if(authUser == null)
+			return "redirect:/";
+		////////////////////////////////////////////////////////////
 		vo.setUser_no(authUser.getNo());
-
 		boardService.addMessage(vo);
 		
 		return "redirect:/board";
-	}
-	
-	@RequestMapping(value="/view/{no}", method=RequestMethod.GET)
-	public String view(@PathVariable("no") Long no, Model model, HttpSession session) {
-		BoardVo vo= boardService.getMessageBoard(no);
-		UserVo authUser = (UserVo) session.getAttribute("authUser");
-		
-		// hit update
-		boardService.updateHitMessage(no);
-		
-		model.addAttribute("vo", vo);
-		model.addAttribute("authUser", authUser);
-		
-		return "board/view";
 	}
 	
 	@RequestMapping(value="/reply/{no}", method=RequestMethod.GET)
@@ -95,7 +93,11 @@ public class BoardController {
 	
 	@RequestMapping(value="/reply/{no}", method=RequestMethod.POST)
 	public String reply(@PathVariable("no") Long no, BoardVo replyVo, HttpSession session) {
+		// 접근 제어(Access Control)///////////////////////////////////
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
+		if(authUser == null)
+			return "redirect:/";
+		////////////////////////////////////////////////////////////
 		BoardVo vo= boardService.getMessageBoard(no);
 		vo.setTitle(replyVo.getTitle());
 		vo.setContents(replyVo.getContents());
