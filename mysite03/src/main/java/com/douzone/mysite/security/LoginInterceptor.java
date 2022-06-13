@@ -2,6 +2,7 @@ package com.douzone.mysite.security;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -30,7 +31,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 		}
 			
 		/* session 처리 */
-		System.out.println(authUser);
+		HttpSession session = request.getSession(true);
+		session.setAttribute("authUser", authUser);
+		
+		response.sendRedirect(request.getContextPath());
 		
 		return false;
 	}
