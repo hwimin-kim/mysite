@@ -3,6 +3,7 @@ desc board;
 
 -- select
 select * from board;
+select * from user;
 select count(*) from board;
 select g_no, o_no, depth from board where no = 1;
 -- update

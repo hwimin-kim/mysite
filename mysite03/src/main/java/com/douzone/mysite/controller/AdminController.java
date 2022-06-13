@@ -34,16 +34,18 @@ public class AdminController {
 	
 	@RequestMapping("/main/update")
 	public String update(
-		SiteVo vo,
+		SiteVo prevVo,
 		@RequestParam("file")MultipartFile multipartFile) {
 		
 		String url = fileUploadService.restore(multipartFile);
-		vo.setProfileURL(url);
+		prevVo.setProfileURL(url);
 		
-		// siteService.updateSite(vo);
+		siteService.updateSite(prevVo);
+		SiteVo newVo = siteService.getSite();
+		servletContext.setAttribute("site", newVo);
 		// 변경 될경우 servletContext 사용해서 "site" 변경
 		
-		return "redirect:/admin/main";
+		return "redirect:/admin";
 	}
 	
 	@RequestMapping("/guestbook")
