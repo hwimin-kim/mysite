@@ -47,8 +47,11 @@ public class BoardRepository {
 		sqlSession.update("board.update", vo);
 	}
 	
-	public void delete(Long no) {
-		sqlSession.delete("board.delete", no);
+	public void delete(Long no,  Long authUserNo) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("no", no);
+		map.put("authUserNo", authUserNo);
+		sqlSession.delete("board.delete", map);
 	}
 	
 }

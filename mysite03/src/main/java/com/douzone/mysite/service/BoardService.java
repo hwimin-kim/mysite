@@ -60,8 +60,8 @@ public class BoardService {
 	}
 
 	// 글 삭제
-	public void deleteMessage(Long no) {
-		boardRepository.delete(no);
+	public void deleteMessage(Long no, Long authUserNo) {
+		boardRepository.delete(no, authUserNo);
 	}
 		
 	// 글 쓰기

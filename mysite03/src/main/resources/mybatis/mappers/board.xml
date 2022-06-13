@@ -123,11 +123,12 @@
 				</choose>
 		</insert>
 		
-		<delete id="delete" parameterType="long">
+		<delete id="delete" parameterType="map">
 				<![CDATA[
 				delete
 					from board
 				where no=#{no }
+					and user_no=#{authUserNo}
 				]]>
 		</delete>
 </mapper>

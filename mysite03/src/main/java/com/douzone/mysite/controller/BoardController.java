@@ -48,14 +48,7 @@ public class BoardController {
 	public String index(@RequestParam("keyWord") String keyWord) {
 		return "redirect:/board/1/"+keyWord;
 	}
-	
-	@RequestMapping(value="/delete/{no}", method=RequestMethod.GET)
-	public String delete(@PathVariable("no") Long no) {
-		boardService.deleteMessage(no);
-		
-		return "redirect:/board";
-	}
-		
+			
 	@RequestMapping(value="/view/{no}", method=RequestMethod.GET)
 	public String view(@PathVariable("no") Long no, Model model, HttpSession session) {
 		boardService.updateHitMessage(no);
@@ -65,6 +58,18 @@ public class BoardController {
 		model.addAttribute("authUser", authUser);
 		
 		return "board/view";
+	}
+	
+	@RequestMapping(value="/delete/{no}", method=RequestMethod.GET)
+	public String delete(@PathVariable("no") Long no, HttpSession session) {
+		// 접근 제어(Access Control)///////////////////////////////////
+		UserVo authUser = (UserVo) session.getAttribute("authUser");
+		if(authUser == null)
+			return "redirect:/";
+		////////////////////////////////////////////////////////////
+		boardService.deleteMessage(no, authUser.getNo());
+		
+		return "redirect:/board";
 	}
 	
 	@RequestMapping(value={"/write", "/write/{no}"}, method=RequestMethod.GET)
