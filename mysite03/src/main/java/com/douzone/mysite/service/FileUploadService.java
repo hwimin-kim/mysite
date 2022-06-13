@@ -46,7 +46,8 @@ public class FileUploadService {
 			url = URL_BASE + "/" + restoreFilename;
 			
 		} catch (IOException e) {
-			throw new FileUploadException(e);
+			// throw new FileUploadException(e);
+			return null;
 		}
 		
 		return url;
