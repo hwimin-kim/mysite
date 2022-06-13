@@ -1,7 +1,5 @@
 package com.douzone.mysite.controller;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.douzone.mysite.security.Auth;
+import com.douzone.mysite.security.AuthUser;
 import com.douzone.mysite.service.UserService;
 import com.douzone.mysite.vo.UserVo;
 
@@ -47,32 +46,19 @@ public class UserController {
 	public void logout() {
 	}
 	
-	@Auth(value="hello", test=true)
+	@Auth
 	@RequestMapping(value="/update", method=RequestMethod.GET)
-	public String update(HttpSession session, Model model) {
-		// 접근 제어(Access Control)
-		UserVo authUser = (UserVo) session.getAttribute("authUser");
-		if(authUser == null) {
-			return "redirect:/";
-		}
-		//////////////////////////////////////////
-		
+	public String update(@AuthUser UserVo authUser, Model model) {	
 		Long no = authUser.getNo();
 		UserVo userVo = userService.getUser(no);
-		model.addAttribute("userVo", userVo);
 		
+		model.addAttribute("userVo", userVo);
 		return "user/update";
 	}
 	
+	@Auth
 	@RequestMapping(value="/update", method=RequestMethod.POST)
-	public String update(HttpSession session, UserVo vo) {
-		// 접근 제어(Access Control)
-		UserVo authUser = (UserVo) session.getAttribute("authUser");
-		if(authUser == null) {
-			return "redirect:/";
-		}
-		//////////////////////////////////////////
-		
+	public String update(@AuthUser UserVo authUser, UserVo vo) {	
 		vo.setNo(authUser.getNo());
 		userService.updateUser(vo);
 		authUser.setName(vo.getName());
