@@ -51,7 +51,7 @@ public class BoardService {
 				currentPage = Integer.parseInt(no);
 		} catch (NumberFormatException e) {
 			currentPage = 1;
-			throw new PagingNumberFormatException(e);
+			// throw new PagingNumberFormatException(e);
 		} finally {
 			pagingVo.setCurrentPage(currentPage);
 			pagingVo.calcPage();		

@@ -40,7 +40,7 @@ public class BoardRepository {
 	}
 	
 	public void insert(BoardVo vo) {
-		int num = sqlSession.insert("board.insert", vo);
+		sqlSession.insert("board.insert", vo);
 	}
 	
 	public void update(BoardVo vo) {

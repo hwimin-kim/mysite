@@ -35,8 +35,6 @@ public class BoardController {
 		List<BoardVo> list = boardService.getMessageList(pagingVo, keyWord);	
 		int totalCount = boardService.getMessageTotalCount(keyWord);
 		
-		System.out.println("글 갯수:" + totalCount);
-		
 		model.addAttribute("pagingVo", pagingVo);
 		model.addAttribute("keyWord", keyWord);
 		model.addAttribute("list", list);
