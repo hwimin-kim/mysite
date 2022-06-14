@@ -8,3 +8,6 @@ select * from user;
 alter table user add column role enum('USER','ADMIN') default 'USER' after gender;
 
 update user set role='ADMIN' where no =1;
+
+				update site
+					set title='Mysite'
