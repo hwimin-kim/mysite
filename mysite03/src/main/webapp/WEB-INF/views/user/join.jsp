@@ -50,8 +50,8 @@
 					
 					<fieldset>
 						<legend>성별</legend>
-						<form:radiobutton path='gender' value='femail' label='여' checked='${userVo.gender == "female" }'/>
-						<form:radiobutton path='gender' value='mail' label='남' checked='${userVo.gender == "male" }'/>
+						<form:radiobutton path='gender' value='femail' label='여' check='${userVo.gender == "female" }'/>
+						<form:radiobutton path='gender' value='mail' label='남' check='${userVo.gender == "male" }'/>
 					</fieldset>
 					
 					<fieldset>
