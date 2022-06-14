@@ -44,6 +44,13 @@
     	<version>${org.springframework-version}</version>
 		</dependency>
 		
+		<!-- Validation -->
+		<dependency>
+		   <groupId>org.hibernate.validator</groupId>
+		   <artifactId>hibernate-validator</artifactId>
+		   <version>6.2.3.Final</version>
+		</dependency>
+
 		<!-- spring JDBC -->
 		<dependency>
 			<groupId>org.springframework</groupId>
