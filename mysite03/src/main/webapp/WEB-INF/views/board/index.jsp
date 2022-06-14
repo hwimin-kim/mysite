@@ -14,9 +14,8 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="${pageContext.servletContext.contextPath }/board/1" method="post">
-					<input type="text" id="keyWord" name="keyWord" value="" placeholder="${keyWord }">
-					<!-- <input type="hidden" id="page" name="page" value="1"> -->
+				<form id="search_form" action="${pageContext.servletContext.contextPath }/board" method="post">
+					<input type="text" id="keyWord" name="kwd" value="" placeholder="${keyWord }">
 					<input type="submit" value="찾기">
 				</form>
 				<table class="tbl-ex">
@@ -36,7 +35,7 @@
 							<c:if test="${vo.depth != 1}">
 								<img src='${pageContext.servletContext.contextPath }/assets/images/reply.png' />
 							</c:if>
-								<a href="${pageContext.servletContext.contextPath }/board/view/${vo.no}">${vo.title }</a>
+								<a href="${pageContext.servletContext.contextPath }/board/view/${vo.no}?p=${pagingVo.currentPage }&kwd=${keyWord }">${vo.title }</a>
 						</td>
 						<td>${vo.name }</td>
 						<td>${vo.hit }</td>
@@ -52,10 +51,10 @@
 				<div class="pager">
 					<ul>
 						<c:if test="${pagingVo.minPage < pagingVo.currentPage and empty keyWord}">
-								<li><a href="${pageContext.servletContext.contextPath }/board/${pagingVo.currentPage -1 }">◀</a></li>
+								<li><a href="${pageContext.servletContext.contextPath }/board?p=${pagingVo.currentPage -1 }">◀</a></li>
 						</c:if>
 						<c:if test="${pagingVo.minPage < pagingVo.currentPage and not empty keyWord}">
-								<li><a href="${pageContext.servletContext.contextPath }/board/${pagingVo.currentPage -1 }/${keyWord }">◀</a></li>
+								<li><a href="${pageContext.servletContext.contextPath }/board?p=${pagingVo.currentPage -1 }&kwd=${keyWord }">◀</a></li>
 						</c:if>
 						<c:forEach var="i" begin="${pagingVo.startPage}" end="${pagingVo.endPage}">
 						<c:choose>
@@ -66,18 +65,18 @@
 										<li>${i }</li>
 								</c:when>
 								<c:when test="${empty keyWord}">
-										<li><a href="${pageContext.servletContext.contextPath }/board/${i }">${i }</a></li>
+										<li><a href="${pageContext.servletContext.contextPath }/board?p=${i }">${i }</a></li>
 								</c:when>
 								<c:otherwise>
-										<li><a href="${pageContext.servletContext.contextPath }/board/${i }/${keyWord }">${i }</a></li>
+										<li><a href="${pageContext.servletContext.contextPath }/board?p=${i }&kwd=${keyWord }">${i }</a></li>
 								</c:otherwise>				
 						</c:choose>
 						</c:forEach>
 						<c:if test="${pagingVo.maxPage > pagingVo.currentPage and empty keyWord}">
-								<li><a href="${pageContext.servletContext.contextPath }/board/${pagingVo.currentPage +1 }">▶</a></li>
+								<li><a href="${pageContext.servletContext.contextPath }/board?p=${pagingVo.currentPage +1 }">▶</a></li>
 						</c:if>
 						<c:if test="${pagingVo.maxPage > pagingVo.currentPage and not empty keyWord}">
-								<li><a href="${pageContext.servletContext.contextPath }/board/${pagingVo.currentPage +1 }/${keyWord }">▶</a></li>
+								<li><a href="${pageContext.servletContext.contextPath }/board?p=${pagingVo.currentPage +1 }&kwd=${keyWord }">▶</a></li>
 						</c:if>	
 					</ul>
 				</div>					
@@ -85,7 +84,7 @@
 				
 				<div class="bottom">
 						<c:if test="${not empty authUser }">
-								<a href="${pageContext.servletContext.contextPath }/board/write" id="new-book">글쓰기</a>
+								<a href="${pageContext.servletContext.contextPath }/board/write?p=${param.p }&kwd=${param.kwd }" id="new-book">글쓰기</a>
 						</c:if>
 				</div>				
 			</div>

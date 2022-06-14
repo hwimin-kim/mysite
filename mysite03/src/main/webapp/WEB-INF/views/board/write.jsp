@@ -19,7 +19,7 @@
 								<form class="board-form" method="post" action="${pageContext.request.contextPath}/board/write">
 						</c:when>
 						<c:otherwise>
-								<form class="board-form" method="post" action="${pageContext.request.contextPath}/board/write/${no }">
+								<form class="board-form" method="post" action="${pageContext.request.contextPath}/board/write/${no }?p=${param.p }&kwd=${param.kwd }">
 						</c:otherwise>				
 				</c:choose>
 					<table class="tbl-ex">
@@ -38,7 +38,14 @@
 						</tr>
 					</table>
 					<div class="bottom">
-						<a href="${pageContext.request.contextPath }/board">취소</a>
+						<c:choose>
+								<c:when test="${empty no}">
+										<a href="${pageContext.request.contextPath }/board?p=${param.p }&kwd=${param.kwd }">취소</a>
+								</c:when>
+								<c:otherwise>
+										<a href="${pageContext.request.contextPath }/board/view/${no }?p=${param.p }&kwd=${param.kwd }">취소</a>
+								</c:otherwise>				
+						</c:choose>
 						<input type="submit" value="등록">
 					</div>
 				</form>				

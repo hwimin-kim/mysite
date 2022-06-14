@@ -16,6 +16,7 @@ import com.douzone.mysite.service.BoardService;
 import com.douzone.mysite.vo.BoardVo;
 import com.douzone.mysite.vo.PagingVo;
 import com.douzone.mysite.vo.UserVo;
+import com.douzone.mysite.web.WebUtil;
 
 @Controller
 @RequestMapping("/board")
@@ -24,10 +25,10 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 	
-	@RequestMapping(value={"", "/{no}","/{no}/{keyWord}"}, method=RequestMethod.GET)
+	@RequestMapping("")
 	public String index(
-						@PathVariable(value="no", required=false) String no,
-						@PathVariable(value="keyWord", required=false) String keyWord,
+						@RequestParam(value="p", required=true, defaultValue="1" ) String no,
+						@RequestParam(value="kwd", required=true, defaultValue="") String keyWord,
 						Model model,
 						@AuthUser UserVo authUser) {	
 		PagingVo pagingVo =  boardService.getMessagePaging(no, keyWord);
@@ -41,11 +42,6 @@ public class BoardController {
 		model.addAttribute("authUser", authUser);
 		
 		return "board/index";
-	}
-	
-	@RequestMapping(value="/1", method = RequestMethod.POST)
-	public String index(@RequestParam("keyWord") String keyWord) {
-		return "redirect:/board/1/"+keyWord;
 	}
 	
 	@RequestMapping(value="/view/{no}", method=RequestMethod.GET)
@@ -74,28 +70,40 @@ public class BoardController {
 	
 	@Auth
 	@RequestMapping(value={"/write", "/write/{no}"}, method=RequestMethod.POST)
-	public String reply(@PathVariable(value="no", required=false) Long no, BoardVo vo, @AuthUser UserVo authUser) {
+	public String reply(
+			@PathVariable(value="no", required=false) Long no,
+			BoardVo vo,
+			@AuthUser UserVo authUser,
+			@RequestParam(value="p", required=true, defaultValue="1" ) String page,
+			@RequestParam(value="kwd", required=true, defaultValue="") String keyWord) {
 		if(no == null) {
 			vo.setUser_no(authUser.getNo());
 			boardService.addMessage(vo);
-		} else
-			boardService.addMessage(boardService.getMessage(no), vo, authUser);
+			
+			return "redirect:/board";
+		}
+		boardService.addMessage(boardService.getMessage(no), vo, authUser);
 		
-		return "redirect:/board";
+		return "redirect:/board?p="+page+"&kwd="+ WebUtil.encodeURL(keyWord, "UTF-8");
 	}
 	
 	@Auth
 	@RequestMapping(value="/modify/{no}", method=RequestMethod.GET)
 	public String modify(@PathVariable("no") Long no, Model model) {
+
 		model.addAttribute("vo", boardService.getMessage(no));	
 		return "board/modify";
 	}
 	
 	@Auth
 	@RequestMapping(value="/modify/{no}", method=RequestMethod.POST)
-	public String modify(@PathVariable("no") Long no, BoardVo vo) {
+	public String modify(
+			@PathVariable("no") Long no,
+			BoardVo vo, 			
+			@RequestParam(value="p", required=true, defaultValue="1" ) String page,
+			@RequestParam(value="kwd", required=true, defaultValue="") String keyWord) {
 		boardService.updateMessage(no, vo);	
 		
-		return "redirect:/board";
+		return "redirect:/board/view/" + no + "?p="+page+"&kwd="+ WebUtil.encodeURL(keyWord, "UTF-8");
 	}
 }

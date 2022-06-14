@@ -43,7 +43,6 @@ public class AdminController {
 		siteService.updateSite(prevVo);
 		SiteVo newVo = siteService.getSite();
 		servletContext.setAttribute("site", newVo);
-		// 변경 될경우 servletContext 사용해서 "site" 변경
 		
 		return "redirect:/admin";
 	}
