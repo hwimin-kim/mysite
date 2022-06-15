@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.douzone.mysite.security.Auth;
+import com.douzone.mysite.security.AuthUser;
 import com.douzone.mysite.service.FileUploadService;
 import com.douzone.mysite.service.GalleryService;
 import com.douzone.mysite.vo.GalleryVo;
+import com.douzone.mysite.vo.UserVo;
 
 @Controller
 @RequestMapping("/gallery")
@@ -29,13 +31,11 @@ public class GalleryController {
 	private GalleryService galleryService;
 	
 	@RequestMapping("")
-	public String index(Model model) {
+	public String index(Model model, @AuthUser UserVo authUser) {
 		List<GalleryVo> list = galleryService.getImages();
 		
-		for(GalleryVo vo : list)
-			System.out.println(vo);
+		model.addAttribute("authUser", authUser);
 		model.addAttribute("list", list);
-		
 		return "gallery/index";
 	}
 	
