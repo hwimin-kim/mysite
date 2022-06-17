@@ -40,9 +40,16 @@
 						<td>${vo.name }</td>
 						<td>${vo.hit }</td>
 						<td>${vo.regDate }</td>
-						<c:if test="${vo.user_no eq authUser.no}">
-								<td><a href="${pageContext.servletContext.contextPath }/board/delete/${vo.no}" class="del">삭제</a></td>
-						</c:if>
+						<td>
+								<c:choose>
+											<c:when test="${vo.user_no eq authUser.no }">
+														<a href="${pageContext.servletContext.contextPath }/board/delete/${vo.no}" class="del" style="background-image:url(${pageContext.request.contextPath }/assets/images/recycle.png)">삭제</a>
+											</c:when>
+											<c:otherwise>
+														&nbsp;
+											</c:otherwise>
+								</c:choose>
+						</td>
 					</tr>
 					</c:forEach>
 				</table>
