@@ -31,6 +31,7 @@ public class UserController {
 	
 	@RequestMapping(value="/join", method=RequestMethod.POST)
 	public String join(@ModelAttribute @Valid UserVo userVo, BindingResult result, Model model) {
+		System.out.println("tttttttttt"+userVo);
 		if(result.hasErrors()) {
 //			List<ObjectError> list= result.getAllErrors();
 //			for(ObjectError error : list)
@@ -40,7 +41,7 @@ public class UserController {
 			//model.addAttribute("userVo", userVo);
 			return "user/join";
 		}
-			
+		
 		userService.join(userVo);
 		return "redirect:/user/joinsuccess";
 	}
