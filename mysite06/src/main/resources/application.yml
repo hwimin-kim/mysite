@@ -1,3 +1,5 @@
+# active spring boot profile
+
 # spring common configuration
 spring:
    profiles:
@@ -10,10 +12,15 @@ spring:
    
    # mvc
    mvc:
+      static-path-pattern: /assets/**
+      throw-exception-if-no-handler-found: true
       view:
          prefix: /WEB-INF/views/
          suffix: .jsp
-   
+   web:
+      resources:
+         static-locations: file:/mysite-uploads/, classpath:/static/
+
    # message resource(i18n)
    messages:
       always-message-format: true
