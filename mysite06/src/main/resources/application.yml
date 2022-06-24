@@ -110,7 +110,7 @@ logging:
          max-file-size: 200MB
          max-history: 10
    file:
-      name: "/${spring.application.name}-logs/exception.log"
+      name: /${spring.application.name}-logs/exception.log
    level:
       root: INFO
       com:
