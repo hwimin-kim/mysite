@@ -4,7 +4,7 @@ desc user;
 
 -- select
 select * from user;
-
+delete from user where name = '바트';
 -- join
 insert
  into user
