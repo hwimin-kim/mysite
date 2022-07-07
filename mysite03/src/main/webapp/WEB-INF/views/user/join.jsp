@@ -10,46 +10,66 @@
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <link href="${pageContext.request.contextPath}/assets/css/user.css" rel="stylesheet" type="text/css">
+<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css">
 <script src="${pageContext.request.contextPath }/assets/js/jquery/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
+var messageBox = function(title, message, callback) {
+	$("#dialog-message p").text(message);
+	$("#dialog-message")
+		.attr("title", title)
+		.dialog({
+			width: 340,
+			modal: true,
+			buttons: {
+				"확인": function(){
+					$(this).dialog('close');
+				}
+			},
+			close: callback
+		});
+}
+
 $(function(){
 	$("#join-form").submit(function(event){
 		event.preventDefault();
 		
 		//1. 이름 유효성(empty) 체크
 		if($("#name").val() === '') {
-			alert("이름이 비어 있습니다.");
-			$("#name").focus();
+			messageBox("회원가입", "이름이 비어 있습니다.", $("#name").focus());
 			return;
 		}
 		//2. 이메일 유효성(empty) 체크
 		if($("#email").val() === '') {
-			alert("이메일이 비어 있습니다.");
-			$("#email").focus();
+			messageBox("회원가입", "이메일이 비어 있습니다.", $("#email").focus());
 			return;
 		}
 		
 		//3. 이메일 중복 체크 유무
 		if(!$("#img-checkemail").is(":visible")) {
-			alert("이메일 중복을 확인해 주세요");
+			messageBox("회원가입", "이메일 중복을 확인해 주세요");
 			return;
 		}
 		
 		//4. 비밀번호 유효성(empty) 체크	
 		if($("#password").val() === '') {
-			alert("비밀번호가 비어 있습니다.");
-			$("#password").focus();
+			messageBox("회원가입", "비밀번호가 비어 있습니다.", $("#password").focus());
 			return;
 		}
 		
 		//5. 약관 동의 유무
 		if(!$("#agree-prov").is(":checked")){
-			alert("약관 동의를 해야 합니다.");
+			messageBox("회원가입", "약관 동의를 해야 합니다.");
 			return;
 		}
 		
 		// 6.ok
 		this.submit();
+	});
+	
+	$('#email').change(function() {
+		$('#btn-checkemail').show();
+		$('#img-checkemail').hide();
 	});
 	
 	$("#btn-checkemail").click(function(){
@@ -142,6 +162,9 @@ $(function(){
 				</form:form>
 				
 			</div>
+		</div>
+		<div id="dialog-message" title="" style='display:none'>
+  		<p style='line-height: 80px'></p>
 		</div>
 		<c:import url="/WEB-INF/views/includes/navigation.jsp" />
 		<c:import url="/WEB-INF/views/includes/footer.jsp" />
