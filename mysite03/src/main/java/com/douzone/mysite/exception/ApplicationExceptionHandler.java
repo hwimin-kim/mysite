@@ -3,6 +3,8 @@ package com.douzone.mysite.exception;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ui.Model;
@@ -15,11 +17,16 @@ public class ApplicationExceptionHandler {
 	private static final Log LOGGER = LogFactory.getLog(ApplicationExceptionHandler.class);
 	
 	@ExceptionHandler(Exception.class)
-	public String handlerException(Exception e, Model model) {
+	public String handlerException(
+			HttpServletRequest request,
+			Exception e, 
+			Model model) {
 		//1. 로깅(logging)
 		StringWriter errors = new StringWriter();
 		e.printStackTrace(new PrintWriter(errors));
 		LOGGER.error(errors.toString());
+		
+		//2. 요청 구분
 		
 		//2. 사과 페이지(종료)
 		model.addAttribute("exception", errors.toString());
