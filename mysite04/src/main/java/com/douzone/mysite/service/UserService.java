@@ -31,6 +31,10 @@ public class UserService {
 		return userRepository.findByno(no);
 	}
 
+	public UserVo getUser(String email) {
+		return userRepository.findByEmail(email);
+	}
+	
 	public void updateUser(UserVo vo) {
 		userRepository.update(vo);
 	}

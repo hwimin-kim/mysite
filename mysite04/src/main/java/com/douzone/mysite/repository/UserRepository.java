@@ -15,6 +15,10 @@ public class UserRepository {
 	public UserVo findByno(Long userNo) {
 		return sqlSession.selectOne("user.findByno", userNo);
 	}
+
+	public UserVo findByEmail(String email) {
+		return sqlSession.selectOne("user.findByEmail", email);
+	}
 	
 	public UserVo findByEmailAndPassword(UserVo vo) {
 		return sqlSession.selectOne("user.findByEmailAndPassword", vo);
